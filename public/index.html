@@ -21,10 +21,10 @@
   <script defer src="/__/firebase/7.15.1/firebase-storage.js"></script>
   <!-- initialize the SDK after all desired features are loaded -->
   <script defer src="/__/firebase/init.js"></script>
-  <script defer src="ruoter.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
   <script defer src="https://kit.fontawesome.com/230002ca0f.js" crossorigin="anonymous"></script>
   <script defer src="https://www.google.com/recaptcha/api.js"></script>
+  <script defer src="ruoter.js"></script>
   <script defer src="app.js"></script>
 
 </head>
@@ -47,15 +47,16 @@
       <div class="column is-half">
         <div class="field">
           <div class="control has-icons-left has-icons-right">
-            <input class="input" type="url" placeholder="目標網址">
+            <input class="input" type="url" placeholder="目標網址" v-on:change="check_url" v-model="input_url"
+              v-bind:class="help_class">
             <span class="icon is-small is-left">
               <i class="fas fa-link"></i>
             </span>
             <span class="icon is-small is-right">
-              <i class="fas fa-question"></i>
+              <i v-bind:class="icon_class"></i>
             </span>
           </div>
-          <p class="help is-success">正確的網址格式</p>
+          <p class="help" v-bind:class="help_class">{{help_text}}</p>
         </div>
         <div class="columns is-vcentered">
           <div class="column">
@@ -63,7 +64,7 @@
               <div class="control">
                 <label class="checkbox">
                   <input type="checkbox">
-                  使用自定義短網址
+                  自定義短網址
                 </label>
               </div>
             </div>
@@ -71,7 +72,7 @@
           <div class="column">
             <div class="field">
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Text input">
+                <input class="input" type="text">
                 <span class="icon is-small is-left">
                   <i class="far fa-user"></i>
                 </span>
@@ -99,6 +100,8 @@
         <div class="g-recaptcha is-inline-block" data-sitekey="6LcObaQZAAAAAAnVFzbV8C3oJQO2UReB57pqCum-"></div>
       </div>
     </div>
+  </section>
+  <section class="section" id="ruoter_dom">
   </section>
 </body>
 
