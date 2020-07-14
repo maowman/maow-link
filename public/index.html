@@ -4,6 +4,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>貓貓短網址</title>
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/7.15.1/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/7.15.1/firebase-database.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script defer src="/__/firebase/init.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+  <script defer src="ruoter.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
   <style>
@@ -11,20 +21,9 @@
       font-family: 'Noto Sans TC', sans-serif;
     }
   </style>
-  <title>貓貓短網址</title>
-  <!-- update the version number as needed -->
-  <script defer src="/__/firebase/7.15.1/firebase-app.js"></script>
-  <!-- include only the Firebase features as you need -->
-  <script defer src="/__/firebase/7.15.1/firebase-auth.js"></script>
-  <script defer src="/__/firebase/7.15.1/firebase-database.js"></script>
-  <script defer src="/__/firebase/7.15.1/firebase-messaging.js"></script>
-  <script defer src="/__/firebase/7.15.1/firebase-storage.js"></script>
-  <!-- initialize the SDK after all desired features are loaded -->
-  <script defer src="/__/firebase/init.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
   <script defer src="https://kit.fontawesome.com/230002ca0f.js" crossorigin="anonymous"></script>
   <script defer src="https://www.google.com/recaptcha/api.js"></script>
-  <script defer src="ruoter.js"></script>
   <script defer src="app.js"></script>
 
 </head>
@@ -63,16 +62,16 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox">
+                  <input type="checkbox" v-model="checkbox" v-on:change="new_hash">
                   自定義短網址
                 </label>
               </div>
             </div>
           </div>
-          <div class="column">
+          <div class="column" v-if="checkbox">
             <div class="field">
               <div class="control has-icons-left">
-                <input class="input" type="text">
+                <input class="input" type="text" v-model="costom" v-on:change="new_hash">
                 <span class="icon is-small is-left">
                   <i class="far fa-user"></i>
                 </span>
@@ -81,14 +80,18 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">預覽網址：https://github.com</label>
+          <label class="label">預覽網址：https://maow-link.web.app/?n={{hash.body}}</label>
+        </div>
+        <div class="field">
+          <a class="label" v-if="done" v-bind:href="result">短網址：{{result}}</a>
         </div>
         <div class="field is-grouped">
+
           <div class="control">
-            <button class="button is-link">生成短網址</button>
+            <button class="button is-link" v-on:click="submit" v-bind:class="{'is-loading':loading}">生成短網址</button>
           </div>
           <div class="control">
-            <button class="button is-link is-light">取消</button>
+            <button class="button is-link is-light" v-on:click="new_hash">換一個短網址</button>
           </div>
         </div>
       </div>
@@ -97,11 +100,11 @@
   <section class="section" id="recaptcha_dom">
     <div class="columns is-centered">
       <div class="column is-half has-text-centered">
-        <div class="g-recaptcha is-inline-block" data-sitekey="6LcObaQZAAAAAAnVFzbV8C3oJQO2UReB57pqCum-"></div>
+        <div class="g-recaptcha is-inline-block" data-sitekey="6LcObaQZAAAAAAnVFzbV8C3oJQO2UReB57pqCum-"
+          data-callback="recaptcha_success" data-expired-callback="recaptcha_fail" data-error-callback="recaptcha_fail">
+        </div>
       </div>
     </div>
-  </section>
-  <section class="section" id="ruoter_dom">
   </section>
 </body>
 

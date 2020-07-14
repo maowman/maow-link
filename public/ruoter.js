@@ -1,40 +1,39 @@
-let router_js = new Vue({
-    el: "#router_dom",
-    data: {
-        key: null,
-        target: null
-    },
-    methods: {
-        check_key: function () {
-            const db = firebase.database();
-            db.ref("router/" + this.key).once("value").then(
-                res => {
-                    this.target = res.val();
-                    this.check_target();
-                }
-            ).catch(
-                err => {
-                    console.log(err);
-                }
-            )
-
-        },
-        check_target: function () {
-            try{
-                const url_obj = new URL(this.target);
-                window.location.href = this.target;
-            }
-            catch (error){
-                console.log(error);
-            }
+function check_key(key) {
+    const db = firebase.database();
+    db.ref("router/" + key).once("value").then(
+        res => {
+            check_target(res.val());
         }
-    },
-    mounted: function () {
-        const plain_url = window.location.href;
-        const url_obj = new URL(plain_url);
-        this.key = url_obj.searchParams.get("n");
-        if (this.key !== null) {
-            this.check_key();
+    ).catch(
+        err => {
+            homepage();
+        }
+    );
+};
+
+function check_target(target) {
+    try {
+        const url_obj = new URL(target);
+        if (window.confirm("即將為你跳轉，目標網址：" + target + "，麻煩使用者注意連結之安全性。")) {
+            window.location.href = target;
         }
     }
-})
+    catch (error) {
+        homepage();
+    }
+};
+
+function homepage() {
+};
+
+window.addEventListener("load", function () {
+    const plain_url = window.location.href;
+    const url_obj = new URL(plain_url);
+    const key = url_obj.searchParams.get("n");
+    if (key !== null) {
+        check_key(key);
+    }
+    else {
+        homepage();
+    }
+});
